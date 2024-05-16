@@ -166,7 +166,7 @@ namespace SALT.Patches
             GameObject vfxOption = UnityEngine.Object.Instantiate(SAObjects.OptionPrefab, vsyncRT.position, vsyncRT.rotation, vsyncRT.parent);
             RectTransform vfxRT = vfxOption.GetComponent<RectTransform>();
             vfxOption.name = "VFXOption";
-            vfxRT.localPosition = vsyncRT.localPosition.SetY(-285);
+            vfxRT.localPosition = vsyncRT.localPosition.SetY(-787.5f);
             var vfx = vfxOption.AddComponent<VFXOption>();
             PauseOption vpo = vfxOption.GetComponent<PauseOption>();
             vpo.label = "VFX";

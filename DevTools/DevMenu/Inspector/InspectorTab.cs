@@ -385,8 +385,10 @@ namespace SALT.DevTools.DevMenu
 
 			if (@object is GameObject gameObject)
 			{
-				foreach (Component component in gameObject.GetComponents<Component>())
+				foreach (Component component in gameObject.GetComponents())
+				{
 					OBJECT_COMPONENTS.Add(new ObjectComponent(component));
+				}
 			}
 		}
 		

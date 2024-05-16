@@ -36,6 +36,8 @@ namespace SALT.DevTools.DevMenu
 			{ typeof(Texture), TypeUtils.GetMethodBySearch(typeof(ObjectInspector), nameof(TextureField)) },
 			{ typeof(Texture2D), TypeUtils.GetMethodBySearch(typeof(ObjectInspector), nameof(TextureField)) },
 			{ typeof(Sprite), TypeUtils.GetMethodBySearch(typeof(ObjectInspector), nameof(SpriteField)) },
+			{ typeof(Mesh), TypeUtils.GetMethodBySearch(typeof(ObjectInspector), nameof(MeshField)) },
+			{ typeof(MusicTrack), TypeUtils.GetMethodBySearch(typeof(ObjectInspector), nameof(MusicTrackField)) },
 		};
 
 		private static readonly HashSet<string> TO_IGNORE = new HashSet<string>()
@@ -169,6 +171,9 @@ namespace SALT.DevTools.DevMenu
 			Vector3Field(transform.localPosition, "Position", false);
 			Vector3Field(transform.localEulerAngles, "Rotation", false);
 			Vector3Field(transform.localScale, "Scale", false);
+			LayerField(transform.gameObject.layer, "Layer", false);
+			StringField(string.IsNullOrWhiteSpace(transform.gameObject.scene.name) ? "Prefabs" : transform.gameObject.scene.name, "Scene", false);
+			StringField(transform.gameObject.tag, "Tag", false);
 		}
 
 		// Draws a rect transform component
@@ -575,6 +580,70 @@ namespace SALT.DevTools.DevMenu
 			DrawLabelledField(vector.x, "X");
 			GUILayout.Space(5);
 			DrawLabelledField(vector.y, "Y");
+
+			GUILayout.EndHorizontal();
+		}
+
+		private void LayerField(int value, string label, bool isPrivate)
+		{
+			GUILayout.BeginHorizontal();
+
+			DrawFieldLabel(label + " #" + value, isPrivate);
+
+			GUILayout.Label(LayerMask.LayerToName(value), GUI.skin.textField);
+
+			GUILayout.EndHorizontal();
+		}
+
+		private void StringField(object value, string label, bool isPrivate)
+		{
+			GUILayout.BeginHorizontal();
+
+			DrawFieldLabel(label, isPrivate);
+
+			GUILayout.Label(value.ToString(), GUI.skin.textField);
+
+			GUILayout.EndHorizontal();
+		}
+
+		private void MeshField(object value, string label, bool isPrivate)
+		{
+			Mesh mesh = (Mesh)value;
+			GUILayout.BeginHorizontal();
+
+			DrawFieldLabel(label, isPrivate);
+
+			if (mesh != null)
+			{
+				DrawLabelledField(mesh.name, "Name");
+				GUILayout.Space(5);
+				if (GUILayout.Button("Save", GUI.skin.textField))
+				{
+					MeshUtils.CacheMesh(mesh.name, mesh);
+					MeshUtils.OpenFolder();
+				}
+			}
+			else
+				GUILayout.Label("null", GUI.skin.textField);
+
+			GUILayout.EndHorizontal();
+		}
+
+		private void MusicTrackField(object value, string label, bool isPrivate)
+		{
+			MusicTrack musicTrack = (MusicTrack)value;
+			GUILayout.BeginHorizontal();
+
+			DrawFieldLabel(label, isPrivate);
+
+			if (musicTrack != null)
+			{
+				DrawLabelledField(musicTrack.clip, "Clip");
+				GUILayout.Space(5);
+				DrawLabelledField(musicTrack.nextTrack, "Next Track");
+			}
+			else
+				GUILayout.Label("null", GUI.skin.textField);
 
 			GUILayout.EndHorizontal();
 		}

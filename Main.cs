@@ -1,4 +1,3 @@
-using SALT.Editor;
 using SALT.Extensions;
 using SALT.Utils;
 using HarmonyLib;
@@ -211,7 +210,18 @@ namespace SALT
             for (int i = 0; i < SceneManager.sceneCountInBuildSettings; ++i)
                 sceneNames.Add(i, SceneManager.GetSceneByBuildIndex(i).name);
             foreach (System.Type type in execAssembly.GetTypes())
-                RuntimeHelpers.RunClassConstructor(type.TypeHandle);
+            {
+                try
+                {
+                    RuntimeHelpers.RunClassConstructor(type.TypeHandle);
+                }
+                catch (Exception e)
+                {
+                    string message = e.GetType() == typeof(Exception) ? e.Message : e.ParseTrace();
+                    Debug.LogError(message);
+                    UI.ErrorUI.CreateError(message);
+                }
+            }
             HarmonyPatcher.PatchAll();
             AddCallbacks();
             try
@@ -220,24 +230,26 @@ namespace SALT
             }
             catch (Exception e)
             {
-                Debug.LogError(e.ParseTrace());
-                UI.ErrorUI.CreateError($"{e.GetType().Name}: {e.Message}");
+                string message = e.GetType() == typeof(Exception) ? e.Message : e.ParseTrace();
+                Debug.LogError(message);
+                UI.ErrorUI.CreateError(message);
                 return;
             }
             FileLogger.Init();
             Console.Console.Init();
             HarmonyOverrideHandler.PatchAll();
+            EntryPoint.IntializeInternalServices();
             try
             {
                 ModLoader.PreLoadMods();
             }
             catch (Exception e)
             {
-                Debug.LogError(e.ParseTrace());
-                UI.ErrorUI.CreateError($"{e.GetType().Name}: {e.Message}");
+                string message = e.GetType() == typeof(Exception) ? e.Message : e.ParseTrace();
+                Debug.LogError(message);
+                UI.ErrorUI.CreateError(message);
                 return;
             }
-            ReplacerCache.ClearCache();
             MethodInfo start = typeof(MainScript).GetInstanceMethod(nameof(MainScript.Start));
             MethodInfo callbacks = typeof(Callbacks).GetStaticMethod(nameof(Callbacks.OnLoad));
             MethodInfo load = typeof(Main).GetStaticMethod(nameof(Load));
@@ -265,17 +277,17 @@ namespace SALT
             Console.KeyBindManager.ReadBinds();
             mainScript.AddComponent<UserInputService>();
             mainScript.AddComponent<ModManager>();
-            mainScript.AddComponent<Console.KeyBindManager.ProcessAllBindings>();
             //mainScript.AddComponent<MemoryStatsScript>();
-            EntryPoint.IntializeInternalServices();
+            Console.KeyBindManager.Init();
             try
             {
                 ModLoader.LoadMods();
             }
             catch (Exception e)
             {
-                Debug.LogError(e.Message);
-                UI.ErrorUI.CreateError(e.Message);
+                string message = e.GetType() == typeof(Exception) ? e.Message : e.ParseTrace();
+                Debug.LogError(message);
+                UI.ErrorUI.CreateError(message);
                 return;
             }
 #if !POST
@@ -294,8 +306,9 @@ namespace SALT
             }
             catch (Exception e)
             {
-                Debug.LogError(e.Message);
-                UI.ErrorUI.CreateError(e.Message);
+                string message = e.GetType() == typeof(Exception) ? e.Message : e.ParseTrace();
+                Debug.LogError(message);
+                UI.ErrorUI.CreateError(message);
             }
 
             // Clears all the temporary memory
@@ -310,7 +323,7 @@ namespace SALT
             }
             catch (Exception e)
             {
-                Debug.LogError(e.Message);
+                Debug.LogError(e.GetType() == typeof(Exception) ? e.Message : e.ParseTrace());
             }
         }
 
@@ -322,7 +335,7 @@ namespace SALT
             }
             catch (Exception e)
             {
-                Debug.LogError(e.Message);
+                Debug.LogError(e.GetType() == typeof(Exception) ? e.Message : e.ParseTrace());
             }
         }
 
@@ -334,7 +347,7 @@ namespace SALT
             }
             catch (Exception e)
             {
-                Debug.LogError(e.Message);
+                Debug.LogError(e.GetType() == typeof(Exception) ? e.Message : e.ParseTrace());
             }
         }
 
@@ -346,7 +359,7 @@ namespace SALT
             }
             catch (Exception e)
             {
-                Debug.LogError(e.Message);
+                Debug.LogError(e.GetType() == typeof(Exception) ? e.Message : e.ParseTrace());
             }
         }
 
@@ -358,7 +371,7 @@ namespace SALT
             }
             catch (Exception e)
             {
-                Debug.LogError(e.Message);
+                Debug.LogError(e.GetType() == typeof(Exception) ? e.Message : e.ParseTrace());
             }
         }
         

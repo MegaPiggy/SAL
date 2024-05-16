@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package >
+  <metadata>
+    <!-- Identifier that must be unique within the hosting gallery -->
+    <id>SmolAmeLoaderThing</id>
+    
+    <!-- Package version number that is used when resolving dependencies -->
+    <version>$version$</version>
+
+    <!-- Unused title -->
+    <title>SALT (Smol Ame Loader Thing)</title>
+
+    <!-- 
+      The description can be used in package manager UI. Note that the
+      nuget.org gallery uses information you add in the portal. 
+    -->
+    <description>A completely open source mod loader and modding framework for the game Smol Ame</description>
+
+    <!-- Small version of the description that is shown on package search page -->
+    <summary>A mod loader and modding framework for Smol Ame</summary>
+    
+    <!-- Authors contain text that appears directly on the gallery -->
+    <authors>$author$</authors>
+    
+    <!-- 
+      Owners are typically nuget.org identities that allow gallery
+      users to easily find other packages by the same owners.  
+    -->
+    <owners />
+    
+    <!-- Project URL provides a link for the gallery -->
+    <projectUrl>https://github.com/MegaPiggy/SALT</projectUrl>
+
+    <!-- <repository type="git" url="https://github.com/MegaPiggy/SALT.git" /> -->
+    
+    <!-- License information is displayed on the gallery -->
+    <license type="file">LICENSE</license>
+
+    <!-- Icon is used in Visual Studio's package manager UI -->
+    <icon>images\WatsonAmeliaPortraitMini.png</icon>
+    <iconUrl>https://raw.githubusercontent.com/MegaPiggy/SALT/main/WatsonAmeliaPortraitMini.png</iconUrl>
+    
+    <!-- A readme.txt to display when the package is installed -->
+    <readme>docs\README.md</readme>
+    
+    <!-- 
+      If true, this value prompts the user to accept the license when
+      installing the package. 
+    -->
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    
+    <!-- Any details about this particular release -->
+    <releaseNotes>Upgraded Console</releaseNotes>
+
+    <!-- Copyright information -->
+    <copyright>Copyright ©2021 Taurus Silver</copyright>
+    
+    <!-- Tags appear in the gallery and can be used for tag searches -->
+    <tags>SALT, Hololive, Smol Ame, KevinCow, Amelia Watson, Modding</tags>
+    
+    <!-- Dependencies are automatically installed when the package is installed -->
+    <dependencies>
+      <group targetFramework=".NETFramework4.8"/>
+    </dependencies>
+    
+    <!-- References are automatically added to the project after the package is installed -->
+    <references>
+      <group targetFramework=".NETFramework4.8">
+        <reference file="SALT.dll" />
+      </group>
+    </references>
+  </metadata>
+  <files>
+    <file src="bin\$configuration$\$id$.pdb" target="lib\net48" />
+    <file src="LICENSE" target="LICENSE" />
+    <file src="WatsonAmeliaPortraitMini.png" target="images\" />
+    <file src="README.md" target="docs\" />
+  </files>
+</package>

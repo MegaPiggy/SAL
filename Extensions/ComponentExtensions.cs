@@ -57,7 +57,7 @@ namespace SALT.Extensions
                         if (field.FieldType.IsValueType)
                             field.SetValue(copyInto, field.GetValue(copyFrom));
                         else if (field.FieldType.IsSerializable)
-                            field.SetValue(copyInto, ObjectCopier.Clone(field.GetValue(copyFrom)));
+                            field.SetValue(copyInto, field.GetValue(copyFrom).Clone());
                         else
                             field.SetValue(copyInto, field.GetValue(copyFrom));
                     }

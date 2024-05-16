@@ -111,7 +111,26 @@ namespace SALT.Diagnostics
         /// </summary>
         /// <param name="exception">The exception that caused the trace</param>
         /// <returns>The stack trace parsed</returns>
-        public static string ParseStackTrace(Exception exception) => ParseStackTrace(new StackTrace(exception, true));
+        public static string ParseStackTrace(Exception exception)
+        {
+            string parsedStackTrace = "";
+            if (exception.InnerException != null) parsedStackTrace += ParseInnerStackTrace(exception.InnerException);
+            parsedStackTrace += ParseStackTrace(new StackTrace(exception, true));
+            return parsedStackTrace;
+        }
+
+        /// <summary>
+        /// Parses a stack trace to potentially add source file information during runtime
+        /// </summary>
+        /// <param name="exception">The exception that caused the trace</param>
+        /// <returns>The stack trace parsed</returns>
+        private static string ParseInnerStackTrace(Exception exception)
+        {
+            string parsedStackTrace = "";
+            if (exception.InnerException != null) parsedStackTrace += ParseInnerStackTrace(exception.InnerException);
+            parsedStackTrace += ParseStackTrace(new StackTrace(exception, true)) + "--- End of inner exception stack trace ---\n";
+            return parsedStackTrace;
+        }
 
         /// <summary>
         /// Parses a stack trace to potentially add source file information during runtime

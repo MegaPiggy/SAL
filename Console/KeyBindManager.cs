@@ -11,11 +11,12 @@ namespace SALT.Console
     {
         private static List<KeyBindManager.KeyBinding> customKeyBinds = new List<KeyBindManager.KeyBinding>();
         private const string FILENAME = "consolekeybindings";
-        public static void Awake()
+
+        public static void Init()
         {
             UserInputService.Instance.InputBegan += ((io, gp) =>
             {
-                foreach (KeyBindManager.KeyBinding customKeyBind in KeyBindManager.customKeyBinds)
+                foreach (KeyBinding customKeyBind in KeyBindManager.customKeyBinds)
                 {
                     if (gp) return;
                     if (customKeyBind.action == io.keyCode)
@@ -63,11 +64,6 @@ namespace SALT.Console
             if (keyBinding == null)
                 return;
             KeyBindManager.customKeyBinds.Remove(keyBinding);
-        }
-
-        public class ProcessAllBindings : MonoBehaviour
-        {
-            public void Awake() => KeyBindManager.Awake();
         }
 
         private class KeyBinding

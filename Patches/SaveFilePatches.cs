@@ -11,7 +11,6 @@ using HarmonyLib;
 public static class SaveScript
 {
     internal static bool stopSave = false;
-    private static bool doneAlready = false;
     private static Dictionary<string, LevelSaveData> levelData = new Dictionary<string, LevelSaveData>();
     private static SaveData saveData
     {
@@ -54,6 +53,7 @@ public static class SaveScript
                 FileStream fileStream = (!File.Exists(text)) ? File.Create(text) : File.OpenWrite(text);
                 new BinaryFormatter().Serialize(fileStream, saveData);
                 fileStream.Close();
+                StoreSaveData();
                 Console.LogSuccess("Game saved to " + text);
             }
         }
@@ -119,6 +119,7 @@ public static class SaveScript
         try
         {
             BackupSaveData();
+            levelData = new Dictionary<string, LevelSaveData>();
             saveData = new SaveData();
             SaveSaveData();
             title = true;
@@ -136,9 +137,7 @@ public static class SaveScript
     {
         try
         {
-            if (doneAlready)
-                return;
-            doneAlready = true;
+            levelData = new Dictionary<string, LevelSaveData>();
             foreach (var kvp in saveData.levelData)
                 levelData.Add(kvp.Key, new LevelSaveData(kvp.Value.levelName, kvp.Value.stacheQuota, kvp.Value.allBubbas, kvp.Value.zeroDeaths, kvp.Value.caseClosed, kvp.Value.bestTime));
         }

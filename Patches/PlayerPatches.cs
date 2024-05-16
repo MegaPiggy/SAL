@@ -62,7 +62,14 @@ namespace SALT.Patches
         [HarmonyPriority(Priority.First)]
         public static bool Prefix(PlayerScript __instance)
         {
-            __instance.EditedStart();
+            try
+            {
+                __instance.EditedStart();
+            }
+            catch (Exception ex)
+            {
+                SALT.Console.Console.LogError(ex.ParseTrace());
+            }
             return false;
         }
 

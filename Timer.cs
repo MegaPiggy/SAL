@@ -24,7 +24,7 @@ namespace SALT
 
         public static bool IsPaused() => isPaused || MainScript.paused;
     }
-
+#if PAUSE_PATCH
     [HarmonyPatch(typeof(PlayerScript))]
     [HarmonyPatch("Update")]
     public static class PlayerPause_Patch
@@ -41,22 +41,23 @@ namespace SALT
         }
 
         public static IEnumerable<CodeInstruction> Transpiler(
-          IEnumerable<CodeInstruction> instr) => instr;//instr.AddRangeAndRemoveWhere(new List<CodeInstruction>{ new CodeInstruction(OpCodes.Call, (object)AccessTools.Method(typeof(Timer), "IsPaused")) }, IsPauseField);
-        //{
-        //    foreach (CodeInstruction codeInstruction in instr)
-        //    {
-        //        CodeInstruction v = codeInstruction;
-        //        if (v.opcode == OpCodes.Ldsfld)
-        //        {
-        //            System.Reflection.FieldInfo info = v.operand as System.Reflection.FieldInfo;
-        //            if (info.Name == "paused")
-        //                yield return new CodeInstruction(OpCodes.Call, (object)AccessTools.Method(typeof(Timer), "IsPaused"));
-        //            else
-        //                yield return v;
-        //        }
-        //        else
-        //            yield return v;
-        //    }
-        //}
+          IEnumerable<CodeInstruction> instr) => instr.AddRangeAndRemoveWhere(new List<CodeInstruction>{ new CodeInstruction(OpCodes.Call, (object)AccessTools.Method(typeof(Timer), "IsPaused")) }, IsPauseField);
+        {
+            foreach (CodeInstruction codeInstruction in instr)
+            {
+                CodeInstruction v = codeInstruction;
+                if (v.opcode == OpCodes.Ldsfld)
+                {
+                    System.Reflection.FieldInfo info = v.operand as System.Reflection.FieldInfo;
+                    if (info.Name == "paused")
+                        yield return new CodeInstruction(OpCodes.Call, (object) AccessTools.Method(typeof(Timer), "IsPaused"));
+                    else
+                        yield return v;
+                }
+                else
+                    yield return v;
+            }
+        }
     }
+#endif
 }

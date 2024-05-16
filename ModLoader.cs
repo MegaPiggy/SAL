@@ -10,13 +10,8 @@ using UnityEngine;
 
 namespace SALT
 {
-    public class ModManager : MonoBehaviour
+    public class ModManager : USingleton<ModManager>
     {
-        private static ModManager _instance;
-        public static ModManager Instance => _instance;
-
-        ModManager() => _instance = this;
-
         void Update() => Main.Update();
 
         void FixedUpdate() => Main.FixedUpdate();
@@ -27,6 +22,28 @@ namespace SALT
         {
             Main.UnLoad();
             Debug.Log("Application ending after " + Time.time + " seconds");
+        }
+
+        SaveData saveData => MainScript.saveData;
+        Dictionary<string, LevelSaveData> levelData
+        {
+            get
+            {
+                Dictionary<string, LevelSaveData> levelData = new Dictionary<string, LevelSaveData>();
+                foreach (var kvp in saveData.levelData)
+                    levelData.Add(kvp.Key, new LevelSaveData(kvp.Value.levelName, kvp.Value.stacheQuota, kvp.Value.allBubbas, kvp.Value.zeroDeaths, kvp.Value.caseClosed, kvp.Value.bestTime));
+                return levelData;
+            }
+        }
+        Dictionary<string, Dictionary<string, object>> levelSaveData
+        {
+            get
+            {
+                Dictionary<string, Dictionary<string, object>> levelData = new Dictionary<string, Dictionary<string, object>>();
+                foreach (var kvp in saveData.levelData)
+                    levelData.Add(kvp.Key, new Dictionary<string, object> { { "levelName", kvp.Value.levelName }, { "stacheQuota", kvp.Value.stacheQuota }, { "allBubbas", kvp.Value.allBubbas }, { "zeroDeaths", kvp.Value.zeroDeaths }, { "caseClosed", kvp.Value.caseClosed }, { "bestTime", kvp.Value.bestTime } });
+                return levelData;
+            }
         }
     }
 
@@ -171,12 +188,19 @@ namespace SALT
 
         private static Mod AddMod(ProtoMod modInfo, Type entryType)
         {
-            IModEntryPoint instance = (IModEntryPoint)Activator.CreateInstance(entryType);
-            ModInfo info = modInfo.ToModInfo();
-            Mod Mod = new Mod(info, instance, modInfo.path);
-            Mods.Add(modInfo.id, Mod);
-            Console.Console.modsText += $"{(Console.Console.modsText.Equals(string.Empty) ? "" : "\n")}<color=#77DDFF>{info.Name}</color> [<color=#77DDFF>Author:</color> {info.Author} | <color=#77DDFF>ID:</color> {info.Id} | <color=#77DDFF>Version:</color> {info.Version}]";
-            return Mod;
+            try
+            {
+                IModEntryPoint entryPoint = (IModEntryPoint)Activator.CreateInstance(entryType);
+                ModInfo info = modInfo.ToModInfo();
+                Mod newMod = new Mod(info, entryPoint, modInfo.path);
+                Mods.Add(modInfo.id, newMod);
+                Console.Console.modsText += $"{(Console.Console.modsText.Equals(string.Empty) ? "" : "\n")}<color=#77DDFF>{info.Name}</color> [<color=#77DDFF>Author:</color> {info.Author} | <color=#77DDFF>ID:</color> {info.Id} | <color=#77DDFF>Version:</color> {info.Version}]";
+                return newMod;
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Error adding mod '{modInfo.id}'!\n{e.GetType().Name}: {e.ParseTraceWithoutName()}");
+            }
         }
 
         internal static void PreLoadMods()

@@ -53,7 +53,7 @@ namespace SALT.Console.Commands
             if (ClearBtn != null)
             {
 #if RELEASE
-                Main.StopSave();
+                //Main.StopSave();
 #endif
                 LevelManager.levelManager.deaths = 0;
                 LevelManager.levelManager.bubbaTokens = new bool[3] { true, true, true };

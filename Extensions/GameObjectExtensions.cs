@@ -283,7 +283,7 @@ namespace SALT.Extensions
         }
 
         // COMPONENT STUFF
-        public static Component[] GetComponents(this GameObject gameObject) => gameObject.GetComponents<Component>();
+        public static Component[] GetComponents(this GameObject gameObject) => gameObject.GetComponents<Component>().Where(c => c != null).ToArray();
 
         public static void RemoveComponent<T>(this GameObject go) where T : Component => UnityEngine.Object.Destroy(go.GetComponent<T>());
         public static void RemoveComponentImmediate<T>(this GameObject go) where T : Component => UnityEngine.Object.DestroyImmediate(go.GetComponent<T>());
@@ -398,7 +398,7 @@ namespace SALT.Extensions
         public static T[] GetInterfaces<T>(this GameObject gObj)
         {
             if (!typeof(T).IsInterface) throw new System.Exception("Specified type is not an interface!");
-            var mObjs = gObj.GetComponents<MonoBehaviour>();
+            var mObjs = gObj.GetComponents<MonoBehaviour>().Where(c => c != null).ToArray();
 
             return (from a in mObjs where a.GetType().GetInterfaces().Any(k => k == typeof(T)) select (T)(object)a).ToArray();
         }

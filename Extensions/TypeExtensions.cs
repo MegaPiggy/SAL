@@ -22,6 +22,7 @@ public static class TypeExtensions
     //    return Type.GetType(name) ?? Base.assembly.GetType(name) ?? typeof(GameObject).Assembly.GetType(name) ?? typeof(SlimeDefinition).Assembly.GetType(name) ?? null;
     //}
 
+    [Obsolete]
     public static Type ToType(this string TypeName)
     {
 

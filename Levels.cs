@@ -29,7 +29,7 @@ public static class Levels
         Callbacks.OnActiveSceneChanged_Trigger(replaced.name.FromSceneName(), next.name.FromSceneName());
     }
 
-    private static void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    internal static void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         SALT.Console.Console.Log("Scene Loaded");
         Callbacks.OnSceneLoaded();
@@ -55,7 +55,7 @@ public static class Levels
 
     public static string LevelName => LevelLoader.levelName;
 
-    public static bool isMainMenu() => Levels.IsLevel(MAIN_MENU) || Levels.IsLevel(Level.MAIN_MENU);
+    public static bool isMainMenu() => IsLevel(MAIN_MENU) || IsLevel(Level.MAIN_MENU);
 
     public static bool isTitleScreen() => isMainMenu() && MainScript.title;
 
@@ -65,17 +65,17 @@ public static class Levels
 
     public static bool IsLevel(Level level) => CurrentLevel == level;
 
-    public static bool isOffice() => Levels.IsLevel(Level.OFFICE);//=> SceneManager.GetActiveScene().buildIndex == 1;
-    public static bool isPopOnRocks() => Levels.IsLevel(Level.POP_ON_ROCKS);//=> SceneManager.GetActiveScene().buildIndex == 2;
-    public static bool isRedHeart() => Levels.IsLevel(Level.RED_HEART);// => SceneManager.GetActiveScene().buildIndex == 3;
-    public static bool isPekoland() => Levels.IsLevel(Level.PEKO_LAND);//SceneManager.GetActiveScene().buildIndex == 4;
-    public static bool isOfficeReversed() => Levels.IsLevel(Level.OFFICE_REVERSED);//SceneManager.GetActiveScene().buildIndex == 5;
-    public static bool isToTheMoon() => Levels.IsLevel(Level.TO_THE_MOON);//SceneManager.GetActiveScene().buildIndex == 6;
-    public static bool isNothing() => Levels.IsLevel(Level.NOTHING);//SceneManager.GetActiveScene().buildIndex == 7;
-    public static bool isMoguMogu() => Levels.IsLevel(Level.MOGU_MOGU);//SceneManager.GetActiveScene().buildIndex == 8;
-    public static bool isInumore() => Levels.IsLevel(Level.INUMORE);//SceneManager.GetActiveScene().buildIndex == 9;
-    public static bool isRushia() => Levels.IsLevel(Level.RUSHIA);//SceneManager.GetActiveScene().buildIndex == 10;
-    public static bool isInascapableMadness() => Levels.IsLevel(Level.INASCAPABLE_MADNESS);//SceneManager.GetActiveScene().buildIndex == 11;
-    public static bool isHereComesHope() => Levels.IsLevel(Level.HERE_COMES_HOPE);//SceneManager.GetActiveScene().buildIndex == 12;
-    public static bool isReflect() => Levels.IsLevel(Level.REFLECT);//SceneManager.GetActiveScene().buildIndex == 13;
+    public static bool isOffice() => IsLevel(Level.OFFICE);//=> SceneManager.GetActiveScene().buildIndex == 1;
+    public static bool isPopOnRocks() => IsLevel(Level.POP_ON_ROCKS);//=> SceneManager.GetActiveScene().buildIndex == 2;
+    public static bool isRedHeart() => IsLevel(Level.RED_HEART);// => SceneManager.GetActiveScene().buildIndex == 3;
+    public static bool isPekoland() => IsLevel(Level.PEKO_LAND);//SceneManager.GetActiveScene().buildIndex == 4;
+    public static bool isOfficeReversed() => IsLevel(Level.OFFICE_REVERSED);//SceneManager.GetActiveScene().buildIndex == 5;
+    public static bool isToTheMoon() => IsLevel(Level.TO_THE_MOON);//SceneManager.GetActiveScene().buildIndex == 6;
+    public static bool isNothing() => IsLevel(Level.NOTHING);//SceneManager.GetActiveScene().buildIndex == 7;
+    public static bool isMoguMogu() => IsLevel(Level.MOGU_MOGU);//SceneManager.GetActiveScene().buildIndex == 8;
+    public static bool isInumore() => IsLevel(Level.INUMORE);//SceneManager.GetActiveScene().buildIndex == 9;
+    public static bool isRushia() => IsLevel(Level.RUSHIA);//SceneManager.GetActiveScene().buildIndex == 10;
+    public static bool isInascapableMadness() => IsLevel(Level.INASCAPABLE_MADNESS);//SceneManager.GetActiveScene().buildIndex == 11;
+    public static bool isHereComesHope() => IsLevel(Level.HERE_COMES_HOPE);//SceneManager.GetActiveScene().buildIndex == 12;
+    public static bool isReflect() => IsLevel(Level.REFLECT);//SceneManager.GetActiveScene().buildIndex == 13;
 }

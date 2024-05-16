@@ -54,16 +54,16 @@ namespace SALT
         /// <param name="b"></param>
         /// <param name="id"></param>
         /// <returns></returns>
-        public static void AddIdentifiable(GameObject b, Character id)
-        {
-            if (b.HasComponent<CharacterIdentifiable>())
-                b.GetComponent<CharacterIdentifiable>().Id = id;
-            else
-                b.AddComponent<CharacterIdentifiable>().Id = id;
-        }
+        public static void AddIdentifiable(GameObject b, Character id) => b.GetOrAddComponent<CharacterIdentifiable>().Id = id;
 
-        private void Awake() { }
-        private void Start() { }
-        private void Update() { }
+        public virtual void Awake() { }
+        public virtual void Start() { }
+        public virtual void Update() { }
+        public virtual void FixedUpdate() { }
+        public virtual void LateUpdate() { }
+        public virtual void OnEnable() { }
+        public virtual void OnDisable() { }
+        public virtual void OnDestroy() { }
+        public virtual void OnApplicationQuit() { }
     }
 }

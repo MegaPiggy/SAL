@@ -11,10 +11,13 @@ namespace SALT.UI
     /// </summary>
     internal class ErrorUI : MonoBehaviour
     {
+        private bool deleted;
         private GameObject canvas;
 
         public void Update()
         {
+            if (deleted) return;
+            if (Main.watermark != null) Main.watermark.SetActive(false);
             if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Space))
             {
                 Application.Quit();
@@ -22,6 +25,8 @@ namespace SALT.UI
             }
             else if (Input.GetKeyDown(KeyCode.Delete))
             {
+                deleted = true;
+                if (Main.watermark != null) Main.watermark.SetActive(true);
                 MainScript.paused = false;
                 if (canvas != null)
                     canvas.DestroyImmediate();
@@ -30,7 +35,7 @@ namespace SALT.UI
                 return;
             }
         } 
-        internal static void CreateError(string message, bool doAbort = true)
+        internal static void CreateError(string message)
         {
             MainScript.paused = true;
             GameObject versionObject = UnityEngine.Object.FindObjectsOfType<RectTransform>().FirstOrDefault(tmp => tmp.gameObject.name == "Version").gameObject;

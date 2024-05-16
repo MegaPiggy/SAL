@@ -20,6 +20,8 @@ namespace SALT.Registries
 
         internal static Dictionary<Level, Material> skyboxes = new Dictionary<Level, Material>();
 
+        internal static Dictionary<Level, Pair<int, float>> moustacheGoals = new Dictionary<Level, Pair<int, float>>();
+
         static LevelRegistry()
         {
             ModdedIDRegistry.RegisterIDRegistry(moddedIds);
@@ -50,6 +52,17 @@ namespace SALT.Registries
         public static void RegisterSkyboxMaterial(Level level, Material skybox)
         {
             skyboxes.Add(level, skybox);
+        }
+
+        /// <summary>
+        /// Register the total amount of moustaches in the level, and the percentage the player needs to collect.
+        /// </summary>
+        /// <param name="level">Level</param>
+        /// <param name="totalMoustaches">Total number of moustaches in the level</param>
+        /// <param name="moustacheQuota">Percentage of moustaches the player needs to collect</param>
+        public static void RegisterMoustacheGoal(Level level, int totalMoustaches, float moustacheQuota)
+        {
+            moustacheGoals.Add(level, new Pair<int, float>(totalMoustaches, moustacheQuota));
         }
 
         internal static void InvokeSceneCreationEvent(Level level, Scene scene, GameObject mainLevelStuff)

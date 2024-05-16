@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SALT
+﻿namespace SALT
 {
     /// <summary>
     /// An enum value for the characters in game.

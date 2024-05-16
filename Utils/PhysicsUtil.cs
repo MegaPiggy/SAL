@@ -10,7 +10,7 @@ public static class PhysicsUtil
         float a = 0.0f;
         foreach (Collider component in obj.GetComponents<Collider>())
         {
-            if (!component.isTrigger)
+            if (component != null && !component.isTrigger)
             {
                 if (obj.activeInHierarchy)
                 {

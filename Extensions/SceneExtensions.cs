@@ -82,7 +82,7 @@ namespace SALT.Extensions
         {
             if (!scene.IsInteractable())
                 return Enumerable.Empty<T>();
-            return scene.GetRootGameObjects().SelectMany(gameObject => gameObject.GetComponents<T>());
+            return scene.GetRootGameObjects().SelectMany(gameObject => gameObject.GetComponents<T>().Cast<Component>()).Where(c => c != null).Cast<T>();
         }
 
         /// <summary>
@@ -136,10 +136,11 @@ namespace SALT.Extensions
         /// </summary>
         /// <param name="self">A Scene instance.</param>
         /// <param name="original">An existing object that you want to make a copy of.</param>
+        /// <param name="keepOriginalName">Whether to keep the <paramref name="original"/>'s name or not</param>
         /// <returns>The instantiated GameObject.</returns>
-        public static GameObject Instantiate(this Scene self, GameObject original)
+        public static GameObject Instantiate(this Scene self, GameObject original, bool keepOriginalName = false)
         {
-            GameObject o = original.Instantiate(true);
+            GameObject o = original.Instantiate(keepOriginalName);
 
             if (!self.IsInteractable())
                 return o;
@@ -158,10 +159,11 @@ namespace SALT.Extensions
         /// </summary>
         /// <param name="self">A Scene instance.</param>
         /// <param name="original">An existing object that you want to make a copy of.</param>
+        /// <param name="keepOriginalName">Whether to keep the <paramref name="original"/>'s name or not</param>
         /// <returns>The instantiated GameObject.</returns>
-        public static GameObject InstantiateInactive(this Scene self, GameObject original)
+        public static GameObject InstantiateInactive(this Scene self, GameObject original, bool keepOriginalName = false)
         {
-            GameObject o = original.InstantiateInactive(true);
+            GameObject o = original.InstantiateInactive(keepOriginalName);
 
             if (!self.IsInteractable())
                 return o;

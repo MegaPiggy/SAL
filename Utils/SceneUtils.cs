@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using SALT.Extensions;
+using SALT.Registries;
 
 namespace SALT.Utils
 {
@@ -224,6 +225,20 @@ namespace SALT.Utils
             MusicLooper.looper.fadeOut = true;
 
             GameObject mainLevelStuff = scene.InstantiateInactive(SAObjects.MainLevelStuff);
+            LevelManager levelManager = mainLevelStuff.GetComponent<LevelManager>();
+            if (LevelRegistry.moustacheGoals.ContainsKey(level))
+            {
+                Pair<int, float> goal = LevelRegistry.moustacheGoals[level];
+                levelManager.totalMoustaches = goal.First;
+                levelManager.moustacheQuota = goal.Second;
+                levelManager.moustacheQuotaInt = Mathf.RoundToInt(goal.First * goal.Second);
+            }
+            else
+            {
+                levelManager.totalMoustaches = 0;
+                levelManager.moustacheQuota = 0;
+                levelManager.moustacheQuotaInt = 0;
+            }
             GameObject player = scene.InstantiateInactive(SAObjects.Player);
             PlayerScript playerScript = player.GetComponent<PlayerScript>();
             playerScript.camTarget = mainLevelStuff.FindChild("CamTarget", true).transform;
@@ -233,17 +248,6 @@ namespace SALT.Utils
             playerScript.checkpoint = mainLevelStuff.FindChild("Checkpoint", true).transform;
             playerScript.groundNormalEmpty = mainLevelStuff.FindChild("GroundNormalEmpty", true).transform;
             playerScript.canRestart = true;
-            GameObject deathZone = scene.InstantiateInactive(SAObjects.DeathZone);
-            GameObject clearButton = scene.InstantiateInactive(SAObjects.LevelClearButton);
-            GameObject bubba1 = scene.InstantiateInactive(SAObjects.BubbaToken);
-            bubba1.GetComponent<TokenScript>().tokenNum = 0;
-            bubba1.transform.position -= new Vector3(0, 2, 0);
-            GameObject bubba2 = scene.InstantiateInactive(SAObjects.BubbaToken);
-            bubba2.GetComponent<TokenScript>().tokenNum = 1;
-            bubba2.transform.position -= new Vector3(1.5f, 2, 0);
-            GameObject bubba3 = scene.InstantiateInactive(SAObjects.BubbaToken);
-            bubba3.GetComponent<TokenScript>().tokenNum = 2;
-            bubba3.transform.position -= new Vector3(-1.5f, 2, 0);
 
             Registries.LevelRegistry.InvokeSceneCreationEvent(level, scene, mainLevelStuff);
 
@@ -253,11 +257,6 @@ namespace SALT.Utils
 
             mainLevelStuff.SetActive(true);
             player.SetActive(true);
-            deathZone.SetActive(true);
-            clearButton.SetActive(true);
-            bubba1.SetActive(true);
-            bubba2.SetActive(true);
-            bubba3.SetActive(true);
             foreach (GameObject obj in scene.GetRootGameObjects())
             {
                 obj.SetActive(true);
@@ -265,13 +264,18 @@ namespace SALT.Utils
 
             HUDScript.HUD.isLoading = false;
             HUDScript.HUD.transitionStart = false;
-            RenderSettings.skybox = SAObjects.Skybox.Instantiate();
+            if (LevelRegistry.skyboxes.ContainsKey(level))
+                RenderSettings.skybox = LevelRegistry.skyboxes[level].Instantiate();
+            else
+                RenderSettings.skybox = SAObjects.Skybox.Instantiate();
             playerScript.currentState = PlayerState.Moving;
             playerScript.SnapCam();
 
             LevelLoader.level = -1;
             MainScript.loading = false;
             LevelLoader.loadCo = null;
+
+            Levels.OnSceneLoaded(scene, LoadSceneMode.Single);
         }
 
         internal static Scene CreateScene(string name)

@@ -5,6 +5,10 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
 using Object = UnityEngine.Object;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
+using UnityEngine.Serialization;
 
 /// <summary>
 /// Contains extension methods for <see cref="object"/>
@@ -14,6 +18,34 @@ public static class ObjectExtensions
     private const string MIDDLE = " cannot be converted to type ";
 
     public static bool Is<T>(this T obj, Func<T, bool> predicate) => predicate(obj);
+
+    public static T Clone<T>(this T source)
+    {
+        if (!typeof(T).IsSerializable)
+            Debug.LogError("The type must be serializable to be cloned.");
+
+        if (ReferenceEquals(source, null))
+            return default(T);
+
+        IFormatter formatter = new BinaryFormatter();
+        SurrogateSelector surrogateSelector = new SurrogateSelector();
+        surrogateSelector.AddSurrogate(typeof(Vector2), new StreamingContext(StreamingContextStates.All), new Vector2Surrogate());
+        surrogateSelector.AddSurrogate(typeof(Vector2Int), new StreamingContext(StreamingContextStates.All), new Vector2IntSurrogate());
+        surrogateSelector.AddSurrogate(typeof(Vector3), new StreamingContext(StreamingContextStates.All), new Vector3Surrogate());
+        surrogateSelector.AddSurrogate(typeof(Vector3Int), new StreamingContext(StreamingContextStates.All), new Vector3IntSurrogate());
+        surrogateSelector.AddSurrogate(typeof(Vector4), new StreamingContext(StreamingContextStates.All), new Vector4Surrogate());
+        surrogateSelector.AddSurrogate(typeof(Quaternion), new StreamingContext(StreamingContextStates.All), new QuaternionSurrogate());
+        surrogateSelector.AddSurrogate(typeof(Bounds), new StreamingContext(StreamingContextStates.All), new BoundsSurrogate());
+        surrogateSelector.AddSurrogate(typeof(BoundsInt), new StreamingContext(StreamingContextStates.All), new BoundsIntSurrogate());
+        surrogateSelector.AddSurrogate(typeof(Plane), new StreamingContext(StreamingContextStates.All), new PlaneSurrogate());
+        formatter.SurrogateSelector = surrogateSelector;
+        using (Stream serializationStream = new MemoryStream())
+        {
+            formatter.Serialize(serializationStream, source);
+            serializationStream.Seek(0L, SeekOrigin.Begin);
+            return (T)formatter.Deserialize(serializationStream);
+        }
+    }
 
     /// <summary>
     /// Performs a TRUE null-check.

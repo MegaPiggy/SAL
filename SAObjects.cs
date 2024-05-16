@@ -281,6 +281,18 @@ namespace SALT
 
 		public static GameObject CreatePlayer() => Player.InstantiateInactive(true);
 
+		public static ModdedLevelButtonScript CreateLevelButtonOnMainMenu(Level level, Transform parent, Vector3 localPosition)
+		{
+			var button = SceneUtils.GetSceneByLevel(SALT.Level.MAIN_MENU).InstantiateInactive(SAObjects.ModdedLevelButton, true);
+			button.name = level.ToTitle() + "Button";
+			button.transform.parent = parent;
+			button.transform.localPosition = localPosition;
+			var mlbs = button.GetComponent<ModdedLevelButtonScript>();
+			mlbs.levelEnum = level;
+			button.SetActive(true);
+			return mlbs;
+		}
+
 		private static void GetPlayer()
 		{
 			LayerMask playerMask = LayerMask.NameToLayer("Player");
@@ -621,6 +633,7 @@ namespace SALT
 			TextMeshProUGUI tmpug = lct.GetComponent<TextMeshProUGUI>();
 			tmpug.text = "MOM";
 			TMP_FontAsset atwriter3 = tmpug.font;
+			Debug.LogError("atwriter3.atlasTexture => " + (atwriter3.atlasTexture == null ? "null" : atwriter3.atlasTexture.ToString()));
 			tmpug.font = atwriter3;
 			tmpug.SetField("m_sharedMaterial", atwriter3.material);
 			tmpug.faceColor = new Color32(45, 45, 45, 255);
@@ -648,6 +661,7 @@ namespace SALT
 			TextMeshProUGUI tmpugt = lctt.GetComponent<TextMeshProUGUI>();
 			tmpugt.text = "00:00.000";
 			TMP_FontAsset atwriter1 = Get<TMP_FontAsset>("atwriter SDF 1");
+			Debug.LogError("atwriter1.atlasTexture => " + (atwriter3.atlasTexture == null ? "null" : atwriter3.atlasTexture.ToString()));
 			tmpugt.font = atwriter1;
 			tmpugt.fontMaterial = atwriter1.material;
 			tmpugt.fontSharedMaterial = atwriter1.material;
@@ -674,6 +688,7 @@ namespace SALT
 			lcdrt.sizeDelta = new Vector2Int(200, 50);
 			TextMeshProUGUI tmpugd = lcd.GetComponent<TextMeshProUGUI>();
 			tmpugd.text = "Deaths: 0";
+			Debug.LogError("atwriter1.atlasTexture2 => " + (atwriter3.atlasTexture == null ? "null" : atwriter3.atlasTexture.ToString()));
 			tmpugd.font = atwriter1;
 			tmpugd.fontMaterial = atwriter1.material;
 			tmpugd.fontSharedMaterial = atwriter1.material;
@@ -710,6 +725,7 @@ namespace SALT
 			lcbrt.sizeDelta = new Vector2Int(200, 50);
 			TextMeshProUGUI tmpugb = lcb.GetComponent<TextMeshProUGUI>();
 			tmpugb.text = "Bubba:";
+			Debug.LogError("atwriter1.atlasTexture3 => " + (atwriter3.atlasTexture == null ? "null" : atwriter3.atlasTexture.ToString()));
 			tmpugb.font = atwriter1;
 			tmpugb.fontMaterial = atwriter1.material;
 			tmpugb.fontSharedMaterial = atwriter1.material;
@@ -799,6 +815,7 @@ namespace SALT
 			lcsrt.sizeDelta = new Vector2Int(200, 50);
 			TextMeshProUGUI tmpugs = lcs.GetComponent<TextMeshProUGUI>();
 			tmpugs.text = "Moustaches: 00%";
+			Debug.LogError("atwriter1.atlasTexture4 => " + (atwriter3.atlasTexture == null ? "null" : atwriter3.atlasTexture.ToString()));
 			tmpugs.font = atwriter1;
 			tmpugs.fontMaterial = atwriter1.material;
 			tmpugs.fontSharedMaterial = atwriter1.material;
@@ -839,6 +856,7 @@ namespace SALT
 			lcccrt.sizeDelta = new Vector2Int(200, 50);
 			TextMeshProUGUI tmpugcc = lccc.GetComponent<TextMeshProUGUI>();
 			tmpugcc.text = "";
+			Debug.LogError("Main.atwriter_Red.atlasTexture => " + (Main.atwriter_Red.atlasTexture == null ? "null" : Main.atwriter_Red.atlasTexture.ToString()));
 			tmpugcc.font = Main.atwriter_Red;//Get<TMP_FontAsset>("atwriter SDF Red")
 			tmpugcc.fontMaterial = Main.atwriter_RedMat;
 			tmpugcc.fontSharedMaterial = Main.atwriter_RedMat;//Get<Material>("atwriter SDF Material");
@@ -855,6 +873,7 @@ namespace SALT
 			tmpugcc.alignment = TextAlignmentOptions.Left;
 			mlcbs.caseClosedText = tmpugcc;
 
+			Debug.LogError("Main.Typo.atlasTexture => " + (Main.Typo.atlasTexture == null ? "null" : Main.Typo.atlasTexture.ToString()));
 			tmpug.font = Main.Typo;//Get<TMP_FontAsset>("Typo SDF");
 			tmpug.fontSharedMaterial = Main.TypoMat;//Get<Material>("Typo SDF Material");
 
@@ -921,47 +940,53 @@ namespace SALT
 			moon.SetActive(true);
 			grav.SetActive(true);
 			grav1.SetActive(true);
+			Debug.LogError("NukeButton");
 			NukeButton = GetInstInactive("NukeButton");
 			NukeButton.name = "NukeButton";
 			NukeButton.Prefabitize();
+			Debug.LogError("GenericButton");
 			GenericButton = GetInstInactive("DeleteButton");
 			GenericButton.name = "GenericButton";
 			GenericButton.RemoveComponentImmediate<GenericButtonScript>();
 			GenericButton.AddComponent<GenericButtonScript>();
 			GenericButton.Prefabitize();
+			Debug.LogError("Spawnpoint");
 			Spawnpoint = GetInstInactive("Spawnpoint");
 			Spawnpoint.name = "Spawnpoint";
 			Spawnpoint.Prefabitize();
+			Debug.LogError("SandwichPlatform");
 			Sandwich = GetInstInactive("SandwichPlatform");
 			Sandwich.name = "SandwichPlatform";
 			Sandwich.Prefabitize();
+			Debug.LogError("GravOverride");
 			GravityOverride = GetInstInactive("GravOverride");
 			GravityOverride.name = "GravOverride";
 			GravityOverride.Prefabitize();
+			Debug.LogError("Tako");
 			Tako = GetInstInactive("Tako");
 			Tako.name = "Tako";
 			Tako.Prefabitize();
-			VFX_sparkle_small = Main.game.LoadAsset<GameObject>("VFX_sparkle_small");
-			VFX_sparkle_small.Prefabitize();
-			ParticleScaler small = VFX_sparkle_small.AddComponent<ParticleScaler>();
+			Debug.LogError("VFX_sparkle_small");
+			VFX_sparkle_small = Main.game.LoadAndPrefabitize("VFX_sparkle_small", true);
+			ParticleScaler small = VFX_sparkle_small.GetOrAddComponent<ParticleScaler>();
 			small.scale = 0.25f;
 			small.speed = 1.75f;
 			small.parts = VFX_sparkle_small.GetComponentsInChildren<ParticleSystem>().ToList();
-			VFX_sparkle_small_pink = Main.game.LoadAsset<GameObject>("VFX_sparkle_small_pink");
-			VFX_sparkle_small_pink.Prefabitize();
-			ParticleScaler small_pink = VFX_sparkle_small_pink.AddComponent<ParticleScaler>();
+			Debug.LogError("VFX_sparkle_small_pink");
+			VFX_sparkle_small_pink = Main.game.LoadAndPrefabitize("VFX_sparkle_small_pink", true);
+			ParticleScaler small_pink = VFX_sparkle_small_pink.GetOrAddComponent<ParticleScaler>();
 			small_pink.scale = 0.25f;
 			small_pink.speed = 0.75f;
 			small_pink.parts = VFX_sparkle_small_pink.GetComponentsInChildren<ParticleSystem>().ToList();
-			VFX_sparkle_big = Main.game.LoadAsset<GameObject>("VFX_sparkle_big");
-			VFX_sparkle_big.Prefabitize();
-			ParticleScaler big = VFX_sparkle_big.AddComponent<ParticleScaler>();
+			Debug.LogError("VFX_sparkle_big");
+			VFX_sparkle_big = Main.game.LoadAndPrefabitize("VFX_sparkle_big", true);
+			ParticleScaler big = VFX_sparkle_big.GetOrAddComponent<ParticleScaler>();
 			big.scale = 0.5f;
 			big.speed = 1.75f;
 			big.parts = VFX_sparkle_big.GetComponentsInChildren<ParticleSystem>().ToList();
-			BubbaToken = Main.game.LoadAsset<GameObject>("BubbaToken");
-			BubbaToken.Prefabitize();
-			ModdedTokenScript token = BubbaToken.AddComponent<ModdedTokenScript>();
+			Debug.LogError("BubbaToken");
+			BubbaToken = Main.game.LoadAndPrefabitize("BubbaToken", true);
+			ModdedTokenScript token = BubbaToken.GetOrAddComponent<ModdedTokenScript>();
 			token.tokenNum = 0;
 			token.clip = Main.game.LoadAsset<AudioClip>("bubbaToken3");
 			token.tokenTransform = BubbaToken.transform.GetChild(0);

@@ -24,8 +24,8 @@ namespace SALT
             return ModLoader.GetModForAssembly(relevantAssembly)?.Path ?? Path.GetDirectoryName(relevantAssembly.Location);
         }
 
-        internal static string GetConfigPath(Mod mod) => FileSystem.CheckDirectory(Path.Combine(Path.Combine(Application.persistentDataPath, "SALT/Config"), mod?.ModInfo.Id ?? "SALT"));
+        internal static string GetConfigPath(Mod mod) => CheckDirectory(Path.Combine(Path.Combine(Application.persistentDataPath, "SALT/Config"), mod?.ModInfo.Id ?? "SALT"));
 
-        public static string GetMyConfigPath() => FileSystem.GetConfigPath(Mod.GetCurrentMod());
+        public static string GetMyConfigPath() => GetConfigPath(Mod.GetCurrentMod());
     }
 }

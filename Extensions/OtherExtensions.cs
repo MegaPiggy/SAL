@@ -612,5 +612,18 @@ namespace SALT.Extensions
 			else
 				return title.Replace(" ", "");
 		}
+
+		public static GameObject LoadAndPrefabitize(this AssetBundle bundle, string name, bool throwOnError = false)
+		{
+			var asset = bundle.LoadAsset<GameObject>(name);
+			if (asset == null)
+            {
+				string message = "GameObject \"" + name + "\" can not be found in bundle \"" + bundle.name + "\"";
+				if (throwOnError) throw new Exception(message);
+				else Console.Console.LogError(message);
+			}
+			asset.Prefabitize();
+			return asset;
+		}
 	}
 }

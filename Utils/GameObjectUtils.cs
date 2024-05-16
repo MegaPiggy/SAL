@@ -31,7 +31,7 @@ namespace SALT.Utils
             indent += "    ";
             builder.AppendLine(indent + "components:");
             string indent1 = indent + "    ";
-            List<Component> list = ((IEnumerable<Component>)obj.GetComponents<Component>()).ToList<Component>();
+            List<Component> list = obj.GetComponents().ToList();
             StringComparer c = StringComparer.Create(CultureInfo.CurrentCulture, true);
             list.Sort((Comparison<Component>)((component, component1) => c.Compare(component.GetType().Name, component1.GetType().Name)));
             foreach (Component component in list)
